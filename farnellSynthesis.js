@@ -1,5 +1,5 @@
 /*
- * Sedona Thomas
+ * Sedona Thomas snt2127, Rami Matar rhm2142, Carolyn Wang cw3136
  * farnellSynthesis.js:
  */
 
