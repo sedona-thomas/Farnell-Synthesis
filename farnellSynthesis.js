@@ -3,6 +3,12 @@
  * farnellSynthesis.js:
  */
 
+var audioCtx;
+var biquadFilter;
+var whiteNoise;
+var analyser;
+var dataArray;
+var bufferLength;
 
 document.addEventListener("DOMContentLoaded", function(event) 
 {
@@ -49,9 +55,6 @@ document.addEventListener("DOMContentLoaded", function(event)
         bufferLength = analyser.frequencyBinCount;
         console.log(bufferLength);
         dataArray = new Uint8Array(bufferLength);
-
-        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-        draw();
     }
 
     function initHighpass() 
@@ -85,9 +88,6 @@ document.addEventListener("DOMContentLoaded", function(event)
         bufferLength = analyser.frequencyBinCount;
         console.log(bufferLength);
         dataArray = new Uint8Array(bufferLength);
-
-        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-        draw();
     }
 
 
