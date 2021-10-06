@@ -3,12 +3,13 @@
  * farnellSynthesis.js:
  */
 
-var audioCtx;
-var biquadFilter;
-var whiteNoise;
-var analyser;
-var dataArray;
-var bufferLength;
+var lowpass1;
+var freq1 = 400;
+var lowpass2;
+var freq2 = 14;
+var highpass;
+var rq = 0.03;
+var mul = 0.1;
 
 document.addEventListener("DOMContentLoaded", function(event) 
 {
@@ -16,6 +17,13 @@ document.addEventListener("DOMContentLoaded", function(event)
     
     const playButton = document.getElementById("play");
     playButton.addEventListener('click', play, false);
+    
+    var audioCtx;
+    var biquadFilter;
+    var whiteNoise;
+    var analyser;
+    var dataArray;
+    var bufferLength;
 
     function play(event) 
     {
