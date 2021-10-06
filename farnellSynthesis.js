@@ -13,7 +13,11 @@ document.addEventListener("DOMContentLoaded", function(event)
 
     function play(event) 
     {
-        
+        var analyser = audioCtx.createAnalyser();
+        var distortion = audioCtx.createWaveShaper();
+        var gainNode = audioCtx.createGain();
+        var biquadFilter = audioCtx.createBiquadFilter();
+        var convolver = audioCtx.createConvolver();
         
         
     }
