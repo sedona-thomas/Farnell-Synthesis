@@ -13,17 +13,82 @@ document.addEventListener("DOMContentLoaded", function(event)
 
     function play(event) 
     {
-        var analyser = audioCtx.createAnalyser();
-        var distortion = audioCtx.createWaveShaper();
-        var gainNode = audioCtx.createGain();
-        var biquadFilter = audioCtx.createBiquadFilter();
-        var convolver = audioCtx.createConvolver();
+        
         
         
     }
 
+    function initLowpass() 
+    {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)
 
+        var bufferSize = 10 * audioCtx.sampleRate,
+            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+            output = noiseBuffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) 
+        {
+            output[i] = Math.random() * 2 - 1;
+        }
+        whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+        whiteNoise.start(0);
 
+        biquadFilter = audioCtx.createBiquadFilter();
+
+        biquadFilter.type = "lowpass";
+        biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+        biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        whiteNoise.connect(biquadFilter).connect(audioCtx.destination);
+
+        analyser = audioCtx.createAnalyser();
+        biquadFilter.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 256;
+        bufferLength = analyser.frequencyBinCount;
+        console.log(bufferLength);
+        dataArray = new Uint8Array(bufferLength);
+
+        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+        draw();
+    }
+
+    function initHighpass() 
+    {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)
+
+        var bufferSize = 10 * audioCtx.sampleRate,
+            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+            output = noiseBuffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) 
+        {
+            output[i] = Math.random() * 2 - 1;
+        }
+        whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+        whiteNoise.start(0);
+
+        biquadFilter = audioCtx.createBiquadFilter();
+
+        biquadFilter.type = "highpass";
+        biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+        biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        whiteNoise.connect(biquadFilter).connect(audioCtx.destination);
+
+        analyser = audioCtx.createAnalyser();
+        biquadFilter.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 256;
+        bufferLength = analyser.frequencyBinCount;
+        console.log(bufferLength);
+        dataArray = new Uint8Array(bufferLength);
+
+        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+        draw();
+    }
 
 
 
