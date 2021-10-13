@@ -42,6 +42,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
         return brownNoise;
     }
 
+    function initHighpass(freq) {
+        highpass = audioCtx.createBiquadFilter();
+        highpass.type = "highpass";
+        highpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        highpass.gain.setValueAtTime(0, audioCtx.currentTime);
+        highpass.connect(audioCtx.destination);
+    }
+
     function initLowpass(freq) {
         var brown = makeBrownNoise();
         lowpass = audioCtx.createBiquadFilter();
