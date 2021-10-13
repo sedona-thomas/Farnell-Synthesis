@@ -17,7 +17,18 @@ document.addEventListener("DOMContentLoaded", function (event) {
     playButton.addEventListener('click', play, false);
 
     function play(event) {
+        if (!audioCtx) {
+            lowpass1 = initLowpass();
+            //lowpass2 = initLowpass(freq2);
+        }
 
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        if (audioCtx.state === 'running') {
+            audioCtx.suspend();
+        }
     }
 
 
@@ -42,12 +53,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
     function initLowpass() {
-        var brownNoise = brownNoise();
+        var brown = brownNoise();
         lowpass = audioCtx.createBiquadFilter();
         lowpass.type = "lowpass";
         lowpass.frequency.setValueAtTime(freq1, audioCtx.currentTime);
         lowpass.gain.setValueAtTime(0, audioCtx.currentTime);
-        brownNoise.connect(lowpass).connect(audioCtx.destination);
+        brown.connect(lowpass).connect(audioCtx.destination);
     }
 
 }, false);
