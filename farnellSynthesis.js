@@ -19,7 +19,7 @@ function play(event) {
     if (!audioCtx) {
         highpass = initHighpass();
         lowpass1 = initLowpass(freq1);
-        //lowpass1.connect(highpass.frequency);
+        lowpass1.connect(highpass.frequency);
         lowpass2 = initLowpass(freq2);
         return;
     }
@@ -55,8 +55,11 @@ function initHighpass() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     highpass = audioCtx.createBiquadFilter();
     highpass.type = "highpass";
+    highpass.frequency.setValueAtTime(0, audioCtx.currentTime);
     highpass.gain.setValueAtTime(0, audioCtx.currentTime);
     highpass.connect(audioCtx.destination);
+    highpass.Q.value = 1 / rq;
+    return highpass;
 }
 
 function initLowpass(freq) {
@@ -66,6 +69,7 @@ function initLowpass(freq) {
     lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
     lowpass.gain.setValueAtTime(0, audioCtx.currentTime);
     brown.connect(lowpass).connect(audioCtx.destination);
+    return lowpass;
 }
 
 
