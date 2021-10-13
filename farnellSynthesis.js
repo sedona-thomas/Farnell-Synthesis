@@ -10,43 +10,38 @@ var freq2 = 14;
 var highpass;
 var rq = 0.03;
 var mul = 0.1;
-var audioCtx;
 var brownNoise;
 
-document.addEventListener("DOMContentLoaded", function(event) 
-{
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+document.addEventListener("DOMContentLoaded", function (event) {
+    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const playButton = document.getElementById("play");
     playButton.addEventListener('click', play, false);
 
-    function play(event) 
-    {
+    function play(event) {
         if (!audioCtx) {
             brownNoise = brownNoise();
             lowpass1 = initLowpass(freq1);
             lowpass2 = initLowpass(freq2);
             return;
         }
-    
+
         if (audioCtx.state === 'suspended') {
             audioCtx.resume();
         }
-    
+
         if (audioCtx.state === 'running') {
             audioCtx.suspend();
         }
     }
 
 
-    function brownNoise()
-    {
+    function brownNoise() {
         var bufferSize = 10 * audioCtx.sampleRate,
-        noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
-        output = noiseBuffer.getChannelData(0);
+            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+            output = noiseBuffer.getChannelData(0);
 
         var lastOut = 0;
-        for (var i = 0; i < bufferSize; i++) 
-        {
+        for (var i = 0; i < bufferSize; i++) {
             var brown = Math.random() * 2 - 1;
             output[i] = (lastOut + (0.02 * brown)) / 1.02;
             lastOut = output[i];
@@ -70,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function(event)
 
         return lowpass
     }
-    
+
 }, false);
 
 /*
@@ -80,15 +75,15 @@ document.addEventListener("DOMContentLoaded", function(event)
     var analyser;
     var dataArray;
     var bufferLength;
-    
-    function initLowpass() 
+
+    function initLowpass()
     {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)
 
         var bufferSize = 10 * audioCtx.sampleRate,
             noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
             output = noiseBuffer.getChannelData(0);
-        for (var i = 0; i < bufferSize; i++) 
+        for (var i = 0; i < bufferSize; i++)
         {
             output[i] = Math.random() * 2 - 1;
         }
@@ -114,14 +109,14 @@ document.addEventListener("DOMContentLoaded", function(event)
         dataArray = new Uint8Array(bufferLength);
     }
 
-    function initHighpass() 
+    function initHighpass()
     {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)
 
         var bufferSize = 10 * audioCtx.sampleRate,
             noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
             output = noiseBuffer.getChannelData(0);
-        for (var i = 0; i < bufferSize; i++) 
+        for (var i = 0; i < bufferSize; i++)
         {
             output[i] = Math.random() * 2 - 1;
         }
