@@ -12,7 +12,7 @@ var rq = 0.03;
 var mul = 0.1;
 
 document.addEventListener("DOMContentLoaded", function (event) {
-    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const playButton = document.getElementById("play");
     playButton.addEventListener('click', play, false);
 
