@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
         lowpass2 = initLowpass(freq2);
     }
 
-
     function makeBrownNoise() {
         var bufferSize = 10 * audioCtx.sampleRate,
             noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
