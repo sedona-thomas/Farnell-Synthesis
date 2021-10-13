@@ -10,7 +10,7 @@ var freq2 = 14;
 var highpass;
 var rq = 0.03;
 var mul = 0.1;
-var brownNoise;
+
 
 document.addEventListener("DOMContentLoaded", function (event) {
     var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -18,20 +18,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     playButton.addEventListener('click', play, false);
 
     function play(event) {
-        if (!audioCtx) {
-            brownNoise = brownNoise();
-            lowpass1 = initLowpass(freq1);
-            lowpass2 = initLowpass(freq2);
-            return;
-        }
 
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
-        if (audioCtx.state === 'running') {
-            audioCtx.suspend();
-        }
     }
 
 
@@ -55,15 +42,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
         return brownNoise;
     }
 
-    function initLowpass(freq) {
+    function initLowpass() {
+        var brownNoise = brownNoise();
         lowpass = audioCtx.createBiquadFilter();
-
         lowpass.type = "lowpass";
-        lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        lowpass.frequency.setValueAtTime(freq1, audioCtx.currentTime);
         lowpass.gain.setValueAtTime(0, audioCtx.currentTime);
         brownNoise.connect(lowpass).connect(audioCtx.destination);
-
-        return lowpass
     }
 
 }, false);
