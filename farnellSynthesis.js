@@ -17,22 +17,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
     playButton.addEventListener('click', play, false);
 
     function play(event) {
-        if (!audioCtx) {
-            lowpass1 = initLowpass();
-            //lowpass2 = initLowpass(freq2);
-        }
-
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
-        if (audioCtx.state === 'running') {
-            audioCtx.suspend();
-        }
+        lowpass1 = initLowpass(freq1);
+        lowpass2 = initLowpass(freq2);
     }
 
 
-    function brownNoise() {
+    function makeBrownNoise() {
         var bufferSize = 10 * audioCtx.sampleRate,
             noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
             output = noiseBuffer.getChannelData(0);
@@ -52,11 +42,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
         return brownNoise;
     }
 
-    function initLowpass() {
-        var brown = brownNoise();
+    function initLowpass(freq) {
+        var brown = makeBrownNoise();
         lowpass = audioCtx.createBiquadFilter();
         lowpass.type = "lowpass";
-        lowpass.frequency.setValueAtTime(freq1, audioCtx.currentTime);
+        lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
         lowpass.gain.setValueAtTime(0, audioCtx.currentTime);
         brown.connect(lowpass).connect(audioCtx.destination);
     }
