@@ -11,6 +11,73 @@ var highpass;
 var rq = 0.03;
 var mul = 0.1;
 
+var audioCtx;
+
+const playButton = document.getElementById("play");
+playButton.addEventListener('click', play, false);
+function play(event) {
+    if (!audioCtx) {
+        highpass = initHighpass();
+        lowpass1 = initLowpass(freq1);
+        //lowpass1.connect(highpass.frequency);
+        lowpass2 = initLowpass(freq2);
+        return;
+    }
+    else if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    else if (audioCtx.state === 'running') {
+        audioCtx.suspend();
+    }
+}
+
+function makeBrownNoise() {
+    var bufferSize = 10 * audioCtx.sampleRate,
+        noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+        output = noiseBuffer.getChannelData(0);
+
+    var lastOut = 0;
+    for (var i = 0; i < bufferSize; i++) {
+        var brown = Math.random() * 2 - 1;
+        output[i] = (lastOut + (0.02 * brown)) / 1.02;
+        lastOut = output[i];
+        output[i] *= 3.5;
+    }
+
+    brownNoise = audioCtx.createBufferSource();
+    brownNoise.buffer = noiseBuffer;
+    brownNoise.loop = true;
+    brownNoise.start(0);
+    return brownNoise;
+}
+
+function initHighpass() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    highpass = audioCtx.createBiquadFilter();
+    highpass.type = "highpass";
+    highpass.gain.setValueAtTime(0, audioCtx.currentTime);
+    highpass.connect(audioCtx.destination);
+}
+
+function initLowpass(freq) {
+    var brown = makeBrownNoise();
+    lowpass = audioCtx.createBiquadFilter();
+    lowpass.type = "lowpass";
+    lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    lowpass.gain.setValueAtTime(0, audioCtx.currentTime);
+    brown.connect(lowpass).connect(audioCtx.destination);
+}
+
+
+
+
+
+
+
+
+
+
+/*
 document.addEventListener("DOMContentLoaded", function (event) {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const playButton = document.getElementById("play");
@@ -19,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     function play(event) {
         highpass = initHighpass();
         lowpass1 = initLowpass(freq1);
-        lowpass1.connect(highpass.freqency);
+        //lowpass1.connect(highpass.frequency);
         lowpass2 = initLowpass(freq2);
     }
 
@@ -60,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
 }, false);
+*/
 
 /*
     var audioCtx;
