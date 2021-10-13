@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
     playButton.addEventListener('click', play, false);
 
     function play(event) {
+        highpass = initHighpass();
         lowpass1 = initLowpass(freq1);
+        lowpass1.connect(highpass.freqency);
         lowpass2 = initLowpass(freq2);
     }
 
@@ -41,10 +43,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
         return brownNoise;
     }
 
-    function initHighpass(freq) {
+    function initHighpass() {
         highpass = audioCtx.createBiquadFilter();
         highpass.type = "highpass";
-        highpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
         highpass.gain.setValueAtTime(0, audioCtx.currentTime);
         highpass.connect(audioCtx.destination);
     }
