@@ -70,7 +70,7 @@ function initLowpass2(freq) {
     var constantSource = audioCtx.createConstantSource();
     constantSource.offset.value = lowpass2Add;
 
-    brown.connect(lowpass).connect(gainNode).connect(audioCtx.destination);
+    brown.connect(lowpass).connect(gainNode).connect(constantSource).connect(audioCtx.destination);
     return lowpass;
 }
 
