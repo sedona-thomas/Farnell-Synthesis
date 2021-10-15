@@ -42,7 +42,7 @@ function initHighpass(lowpass) {
     high.type = "highpass";
     high.frequency.setValueAtTime(0, audioCtx.currentTime);
     high.gain.setValueAtTime(0, audioCtx.currentTime);
-    highpass.connect(audioCtx.destination);
+    high.connect(audioCtx.destination);
     high.Q.value = 1 / rq;
     return high;
 }
