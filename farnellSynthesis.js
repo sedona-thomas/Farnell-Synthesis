@@ -19,8 +19,8 @@ playButton.addEventListener('click', play, false);
 function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
-        lowpass1 = initLowpass(freq1);
-        highpass = initHighpass(lowpass1);
+        highpass = initHighpass();
+        lowpass1 = initLowpass(freq1, highpass);
         lowpass2 = initLowpass2(freq2);
         lowpass2.connect(highpass.frequency);
         return;
@@ -37,7 +37,7 @@ function initAudio() {
     return new (window.AudioContext || window.webkitAudioContext)();
 }
 
-function initHighpass(lowpass) {
+function initHighpass() {
     var high = audioCtx.createBiquadFilter();
     high.type = "highpass";
     high.frequency.setValueAtTime(0, audioCtx.currentTime);
@@ -47,13 +47,13 @@ function initHighpass(lowpass) {
     return high;
 }
 
-function initLowpass(freq) {
+function initLowpass(freq, highpass) {
     var brown = makeBrownNoise();
     lowpass = audioCtx.createBiquadFilter();
     lowpass.type = "lowpass";
     lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
     lowpass.gain.setValueAtTime(0, audioCtx.currentTime);
-    brown.connect(lowpass).connect(audioCtx.destination);
+    brown.connect(lowpass).connect(highpass);
     return lowpass;
 }
 
