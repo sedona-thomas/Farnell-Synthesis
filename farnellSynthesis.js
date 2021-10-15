@@ -11,7 +11,7 @@ var freq1 = 400;
 var lowpass2;
 var freq2 = 14;
 var lowpass2Mult = 400;
-var lowpass2Add = 500;
+var lowpass2Add = 500 / 400;
 
 var highpass;
 var rq = 0.03;
@@ -23,7 +23,7 @@ function play(event) {
     if (!audioCtx) {
         audioCtx = initAudio();
         highpass = initHighpass();
-        lowpass1 = initLowpass(freq1, highpass);
+        lowpass1 = initLowpass1(freq1, highpass);
         lowpass2 = initLowpass2(freq2, highpass);
         return;
     }
@@ -40,17 +40,21 @@ function initAudio() {
 }
 
 function initHighpass() {
-    var high = audioCtx.createBiquadFilter();
+    let high = audioCtx.createBiquadFilter();
     high.type = "highpass";
     high.frequency.setValueAtTime(0, audioCtx.currentTime);
     high.gain.setValueAtTime(0, audioCtx.currentTime);
-    high.connect(audioCtx.destination);
     high.Q.value = 1 / rq;
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+
+    high.connect(gainNode).connect(audioCtx.destination);
     return high;
 }
 
-function initLowpass(freq, highpass) {
-    var brown = makeBrownNoise();
+function initLowpass1(freq, highpass) {
+    let brown = makeBrownNoise();
     lowpass = audioCtx.createBiquadFilter();
     lowpass.type = "lowpass";
     lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
@@ -60,7 +64,7 @@ function initLowpass(freq, highpass) {
 }
 
 function initLowpass2(freq, highpass) {
-    var brown = makeBrownNoise();
+    let brown = makeBrownNoise();
     lowpass = audioCtx.createBiquadFilter();
     lowpass.type = "lowpass";
     lowpass.frequency.setValueAtTime(freq, audioCtx.currentTime);
@@ -69,14 +73,14 @@ function initLowpass2(freq, highpass) {
     const gainNode = audioCtx.createGain();
     gainNode.gain.setValueAtTime(lowpass2Mult, audioCtx.currentTime);
 
-    var constantSource = audioCtx.createConstantSource();
+    let constantSource = audioCtx.createConstantSource();
     constantSource.offset.value = lowpass2Add;
 
     brown.connect(lowpass).connect(gainNode);
-    constantSource.connect(gainNode.gain);
+    constantSource.connect(gainNode);
     constantSource.start();
 
-    gainNode.connect(highpass);
+    gainNode.connect(highpass.frequency);
     return lowpass;
 }
 
