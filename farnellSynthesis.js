@@ -18,7 +18,7 @@ const playButton = document.getElementById("play");
 playButton.addEventListener('click', play, false);
 function play(event) {
     if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();//initAudio();
+        audioCtx = initAudio();
         lowpass1 = initLowpass(freq1);
         highpass = initHighpass(lowpass1);
         lowpass2 = initLowpass2(freq2);
